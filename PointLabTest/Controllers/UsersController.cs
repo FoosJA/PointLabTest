@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace PointLabTest.Controllers
 {
@@ -27,7 +29,7 @@ namespace PointLabTest.Controllers
 		[HttpPost("register")]
 		public IActionResult Post(string username, string password, string email)
 		{
-			User user = new User() { UserName = username, Email = email, Password = password };
+			User user = new User() { UserName = username, Email = email, Password = GetHash(password) };
 			var validCtx = new ValidationContext(user);
 			var validRst = new List<ValidationResult>();
 			if (!Validator.TryValidateObject(user, validCtx, validRst, true))
@@ -54,21 +56,31 @@ namespace PointLabTest.Controllers
 		[HttpPost("login")]
 		public IActionResult Post(string username, string password)
 		{
-			if(username is null || password is null)
+			if (username is null || password is null)
 			{
 				Response.StatusCode = 400;
 				return new JsonResult(new MyResponse() { Success = false, Message = "Некорректный запрос" });
 			}
 			try//TODO: Ответ должен содержать класс userdata с полями пользователя
 			{
-				User user = _ctx.Users.Single(x => x.UserName == username && x.Password == password);
+				var hashPassword = GetHash(password);
+				User user = _ctx.Users.Single(x => x.UserName == username && x.Password == hashPassword);
 				return new JsonResult(new MyResponse() { Success = true, Message = "Успешный успех" });
 			}
 			catch
 			{
 				Response.StatusCode = 401;
 				return new JsonResult(new MyResponse() { Success = false, Message = "Пользователь не найден" });
-			}					
+			}
 		}
+
+		public string GetHash(string input)
+		{
+			var md5 = MD5.Create();
+			var hash = md5.ComputeHash(Encoding.UTF8.GetBytes(input));
+
+			return Convert.ToBase64String(hash);
+		}
+
 	}
 }
