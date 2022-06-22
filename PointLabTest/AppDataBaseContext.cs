@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace PointLabTest
 {
-	public class AppDataBaseContext: DbContext
+	public class AppDataBaseContext : DbContext
 	{
 		public AppDataBaseContext(DbContextOptions<AppDataBaseContext> options)
 		  : base(options)
 		{
 
 		}
-		public DbSet<User> Users { get; set; }
+		public DbSet<UserData> Users { get; set; }
 	}
 }

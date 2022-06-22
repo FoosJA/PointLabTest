@@ -2,7 +2,7 @@
 
 namespace PointLabTest.Models
 {
-	public class User
+	public class UserData
 	{
 		public int Id { get; set; }
 
