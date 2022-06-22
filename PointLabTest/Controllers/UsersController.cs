@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PointLabTest.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -46,12 +44,12 @@ namespace PointLabTest.Controllers
 			if (_ctx.Users.Any(x => x.Email == user.Email))
 			{
 				Response.StatusCode = 400;
-				return new JsonResult(new { Success = false, Message = "Пользователь с таким email уже существует" });
+				return new JsonResult(new { Success = false, Message = "Пользователь с таким email уже существует!" });
 			}
 
 			_ctx.Users.Add(user);
 			_ctx.SaveChanges();
-			return new JsonResult(new { Success = true, Message = "Успешный успех" });
+			return new JsonResult(new { Success = true, Message = "Пользователь зарегистрирован." });
 		}
 
 
@@ -61,18 +59,18 @@ namespace PointLabTest.Controllers
 			if (username is null || password is null)
 			{
 				Response.StatusCode = 400;
-				return new JsonResult(new { userdata = (string)null, Success = false, Message = "Некорректный запрос" });
+				return new JsonResult(new { userdata = (string)null, Success = false, Message = "Некорректный запрос!" });
 			}
 			try
 			{
 				var hashPassword = GetHash(password);
 				UserData user = _ctx.Users.Single(x => x.UserName == username && x.Password == hashPassword);
-				return new JsonResult(new { userdata = user, Success = true, Message = "Успешный успех" });
+				return new JsonResult(new { userdata = user, Success = true, Message = "Вход выолнен успешно." });
 			}
 			catch
 			{
 				Response.StatusCode = 401;
-				return new JsonResult(new { userdata = (string)null, Success = false, Message = "Пользователь не найден" });
+				return new JsonResult(new { userdata = (string)null, Success = false, Message = "Пользователь не найден." });
 			}
 		}
 		/// <summary>
