@@ -18,11 +18,7 @@ namespace PointLabTest.Controllers
 		{ _ctx = ctx; }
 
 
-		[HttpGet("test")]
-		public IEnumerable<string> Get()
-		{
-			return new string[] { "val1", "val2" };
-		}
+		
 
 		[HttpPost("register")]
 		public IActionResult Post(string username, string password, string email)
